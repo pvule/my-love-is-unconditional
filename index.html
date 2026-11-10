@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Une invitation pour toi 💌</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=DynaPuff:wght@500;700&family=Nunito:wght@500;700&display=swap">
+<style>
+:root{color-scheme:light;--rouge:#d6303f;--bleu:#bfe0f2;--blanc:#fffdf8;--beurre:#ffd95e;--encre:#3a1d22;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100vh;display:grid;place-items:center;padding:20px;color:var(--encre);
+font-family:'Nunito',system-ui,sans-serif;font-size:18px;overflow-x:hidden;
+background:
+ repeating-linear-gradient(90deg,rgba(214,48,63,.28) 0 44px,transparent 44px 88px),
+ repeating-linear-gradient(0deg,rgba(214,48,63,.28) 0 44px,transparent 44px 88px),
+ var(--blanc)}
+h1,h2{font-family:'DynaPuff','Trebuchet MS',cursive;font-weight:700;margin:0;line-height:1.1}
+.scene{width:100%;max-width:460px;text-align:center}
+.card{background:var(--blanc);border:3px solid var(--encre);border-radius:28px;padding:30px 24px;box-shadow:8px 8px 0 var(--encre)}
+.hidden{display:none!important}
+
+/* enveloppe */
+#env{background:none;border:0;cursor:pointer;font:inherit;color:inherit;padding:0}
+.enveloppe{width:min(400px,86vw);aspect-ratio:1.5;margin:0 auto 18px;background:var(--rouge);border:3px solid var(--encre);border-radius:14px;position:relative;box-shadow:8px 8px 0 var(--encre);animation:bob 2.4s ease-in-out infinite}
+.enveloppe::before{content:"";position:absolute;inset:0;background:linear-gradient(to bottom right,transparent 49.5%,#fff 49.5% 50.5%,transparent 50.5%) left/50% 100% no-repeat,linear-gradient(to bottom left,transparent 49.5%,#fff 49.5% 50.5%,transparent 50.5%) right/50% 100% no-repeat;border-radius:12px}
+#env h1{font-family:'Dancing Script','Brush Script MT',cursive;font-size:clamp(40px,11vw,56px);color:var(--rouge);margin-bottom:6px}
+#env p{font-weight:700}
+.coeur{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:46px}
+@keyframes bob{50%{transform:translateY(-8px) rotate(-1.5deg)}}
+
+/* invitation */
+#invit h1{font-size:clamp(30px,8vw,40px);color:var(--rouge)}
+.age{display:inline-block;background:var(--beurre);border:3px solid var(--encre);border-radius:999px;padding:4px 16px;margin:14px 0;font-family:'DynaPuff',cursive;font-weight:700}
+.infos{list-style:none;padding:0;margin:18px 0;text-align:left;display:grid;gap:8px}
+.infos li{background:#fff;border:2px dashed var(--rouge);border-radius:14px;padding:10px 14px}
+.question{font-family:'DynaPuff',cursive;font-size:22px;margin:22px 0 14px}
+.boutons{position:relative;display:flex;justify-content:center;gap:16px;min-height:64px;align-items:center}
+button.b{font:700 18px 'Nunito',sans-serif;border:3px solid var(--encre);border-radius:999px;padding:14px 26px;cursor:pointer;box-shadow:4px 4px 0 var(--encre);touch-action:manipulation}
+#oui{background:var(--rouge);color:#fff}
+#oui:focus-visible,#non:focus-visible{outline:4px solid var(--encre);outline-offset:3px}
+#non{background:var(--bleu);color:var(--encre);transition:left .25s cubic-bezier(.3,1.6,.5,1),top .25s cubic-bezier(.3,1.6,.5,1),transform .25s}
+#non.fuite{position:fixed;z-index:5}
+.taquin{min-height:26px;margin:12px 0 0;font-weight:700}
+
+/* oui */
+#merci h2{font-size:clamp(30px,8vw,40px);color:var(--rouge);margin-bottom:10px}
+#merci .gros{font-size:64px;display:block;margin-bottom:6px}
+.confetti{position:fixed;top:-20px;font-size:26px;z-index:10;pointer-events:none;animation:tombe linear forwards}
+@keyframes tombe{to{transform:translateY(110vh) rotate(540deg);opacity:.9}}
+.cpt{font-family:'DynaPuff',cursive;color:var(--rouge);font-size:20px;margin:18px 0}
+.ticket{display:grid;gap:4px;border:3px dashed var(--rouge);border-radius:16px;padding:14px;margin:16px 0;background:#fff}
+.ticket b{font-family:'DynaPuff',cursive;color:var(--rouge);font-size:20px}
+.lettre{font-family:'Dancing Script','Brush Script MT',cursive;font-size:26px;line-height:1.35;min-height:6em;text-align:left;margin:16px 0 0;white-space:pre-wrap}
+#versQuiz{margin-top:20px;background:var(--beurre);color:var(--encre)}
+#quiz h2{font-size:clamp(24px,6vw,30px);color:var(--rouge);margin:6px 0}
+.qnum{margin:0;font-weight:700}
+.reps{display:grid;gap:10px;margin:18px 0}
+.rep{background:#fff;color:var(--encre);text-align:left}
+.rep:disabled{opacity:1;cursor:default}
+.rep.ok{background:#c9f0c9}
+.rep.ko{background:#ffd3d3}
+@media (prefers-reduced-motion:reduce){.enveloppe{animation:none}#non{transition:none}.confetti{display:none}}
+</style>
+</head>
+<body>
+<main class="scene">
+
+<button id="env" aria-label="Ouvrir l’enveloppe">
+  <div class="enveloppe"><span class="coeur">💌</span></div>
+  <h1>Tu as reçu quelque chose…</h1>
+  <p>Touche l’enveloppe pour l’ouvrir</p>
+</button>
+
+<section id="invit" class="card hidden">
+  <h1>Tu es convié, <span id="prenom"></span> 🤍</h1>
+  <div class="age">Pour tes 27 ans</div>
+  <p>Je t’attends pour un pique-nique rien que pour nous.</p>
+  <ul class="infos">
+    <li>📅 Samedi 5 décembre</li>
+    <li>🕐 <span id="heure"></span></li>
+    <li>📍 <span id="lieu"></span></li>
+  </ul>
+  <p class="question">Tu viens ?</p>
+  <div class="boutons" id="zone">
+    <button class="b" id="oui">Oui, avec plaisir</button>
+    <button class="b" id="non">Non</button>
+  </div>
+  <p class="taquin" id="taquin" aria-live="polite"></p>
+</section>
+
+<section id="merci" class="card hidden">
+  <span class="gros">🧺</span>
+  <h2>Je le savais !</h2>
+  <p>Viens, mon food lover, avec ta bonne humeur. Je m’occupe du reste.</p>
+  <p><strong>À très vite, joyeux anniversaire, bébé Miè Zo’o 🎂</strong></p>
+  <p class="cpt" id="cpt"></p>
+  <div class="ticket"><b>🎟️ Pique-nique d’anniversaire</b><span>Pour : Miè Zo’o</span><span>Samedi 5 décembre · 16 h · La Sablière</span><span>Place : à côté de moi 🤍</span></div>
+  <p class="lettre" id="lettre"></p>
+  <button class="b" id="versQuiz">Un petit quiz sur nous 🤍</button>
+</section>
+
+<section id="quiz" class="card hidden">
+  <p class="qnum" id="qnum"></p>
+  <h2 id="qtitre"></h2>
+  <div class="reps" id="reps"></div>
+  <p class="taquin" id="qfb" aria-live="polite"></p>
+  <button class="b hidden" id="qsuite">Suivant</button>
+</section>
+
+</main>
+<script>
+// ✏️ À modifier : les infos de l’invitation
+var PRENOM = "mon cœur";
+var HEURE  = "16 h";
+var LIEU   = "La Sablière";
+
+document.getElementById('prenom').textContent = PRENOM;
+document.getElementById('heure').textContent = HEURE;
+document.getElementById('lieu').textContent = LIEU;
+
+var env = document.getElementById('env'), invit = document.getElementById('invit'),
+    merci = document.getElementById('merci'), non = document.getElementById('non'),
+    oui = document.getElementById('oui'), taquin = document.getElementById('taquin');
+
+env.addEventListener('click', function(){ env.classList.add('hidden'); invit.classList.remove('hidden'); });
+
+var essais = 0, traitre = false;
+var messages = ["Hé, pas si vite 😏","Raté !","Il est timide, ce bouton…","Tu n’y arriveras pas 😄","Allez, tu sais que tu veux dire oui","Même lui ne veut pas que tu dises non 💛"];
+
+function devenirOui(){
+  traitre = true;
+  non.classList.remove('fuite'); non.style.left = ''; non.style.top = ''; non.style.transform = '';
+  non.textContent = 'Oui 😏'; non.style.background = 'var(--beurre)';
+  taquin.textContent = "Bon… celui-là aussi veut dire oui 😏";
+}
+function fuir(px, py){
+  if (essais >= 6) { devenirOui(); return; }
+  var w = window.innerWidth, h = window.innerHeight;
+  var r = non.getBoundingClientRect();
+  var bw = r.width || 100, bh = r.height || 50, x, y, tries = 0;
+  do {
+    x = 12 + Math.random() * (w - bw - 24);
+    y = 12 + Math.random() * (h - bh - 24);
+    tries++;
+  } while (tries < 25 && Math.hypot(x + bw/2 - px, y + bh/2 - py) < 180);
+  non.classList.add('fuite');
+  non.style.left = x + 'px'; non.style.top = y + 'px';
+  essais++;
+  taquin.textContent = messages[Math.min(essais - 1, messages.length - 1)];
+  if (essais > 4) { non.style.transform = 'scale(' + Math.max(.55, 1 - (essais - 4) * .06) + ')'; }
+  oui.style.transform = 'scale(' + Math.min(1.35, 1 + essais * .04) + ')';
+}
+
+// Approche du pointeur (souris) : le bouton s'enfuit avant d'être touché
+document.addEventListener('pointermove', function(e){
+  if (invit.classList.contains('hidden') || traitre) return;
+  var r = non.getBoundingClientRect();
+  var d = Math.hypot(e.clientX - (r.left + r.width/2), e.clientY - (r.top + r.height/2));
+  if (d < 90) fuir(e.clientX, e.clientY);
+});
+// Doigt / clic : il esquive aussi
+['pointerdown','touchstart'].forEach(function(ev){
+  non.addEventListener(ev, function(e){ if (traitre) return; e.preventDefault(); var t = e.touches ? e.touches[0] : e; fuir(t.clientX, t.clientY); }, {passive:false});
+});
+non.addEventListener('click', function(e){ e.preventDefault(); if (traitre) accepter(); });
+// Accessibilité clavier
+non.addEventListener('focus', function(){ if (traitre) return; fuir(-999, -999); oui.focus(); });
+
+oui.addEventListener('click', accepter);
+function accepter(){
+  invit.classList.add('hidden'); non.classList.add('hidden'); merci.classList.remove('hidden');
+  var emojis = ['🎉','💛','🧺','🍓','🎂','🌼','✨'];
+  for (var i = 0; i < 40; i++) {
+    var c = document.createElement('span');
+    c.className = 'confetti'; c.textContent = emojis[i % emojis.length];
+    c.style.left = Math.random() * 100 + 'vw';
+    c.style.animationDuration = (2.5 + Math.random() * 2.5) + 's';
+    c.style.animationDelay = (Math.random() * 1.2) + 's';
+    document.body.appendChild(c);
+    setTimeout(function(el){ el.remove(); }, 7000, c);
+  }
+  lancerSuite();
+}
+
+var QUIZ = [
+  {q:"Où avons-nous fêté notre premier anniversaire de couple ?", r:["Dans un fast-food, avec une bougie sur un burger","Chez Bokos","Au bord de la route, dans un food truck","À la maison, devant un film"], b:1, ok:"Chez Bokos, bien sûr 🤍", ko:"Raté 😏 C’était chez Bokos !"},
+  {q:"Quelle a été ma première impression de toi ?", r:["Il a l’air complètement perdu, celui-là","Il va encore me demander à manger","Oh my God, qui est ce beau mec ?","Trop de questions, pas assez de réponses"], b:2, ok:"Exactement : un vrai pain 😍", ko:"Non 😄 C’était : « Oh my God, qui est ce beau mec ? »"},
+  {q:"Qui a dit « je t’aime » en premier ?", r:["Moi","Toi","On l’a dit en même temps","Personne, c’était un hoquet"], b:1, ok:"C’est toi qui as craqué le premier 🤍", ko:"Faux ! C’est toi qui l’as dit en premier."},
+  {q:"Qui mange le plus entre nous deux ?", r:["Toi, de loin","Moi, de loin","Nous deux, mais un peu plus moi","Aucun de nous, on grignote juste"], b:2, ok:"On est deux gourmands, mais un peu plus moi 😅", ko:"Non 😄 Nous deux, mais un peu plus moi."},
+  {q:"Qui pète le plus souvent ?", r:["Moi, jamais","Toi","Personne, on est des anges","Le voisin"], b:1, ok:"Aucune pitié, c’est bien toi 💨", ko:"Mauvaise réponse 😂 C’est toi."}
+];
+var quiz = document.getElementById('quiz'), qnum = document.getElementById('qnum'), qtitre = document.getElementById('qtitre'),
+    reps = document.getElementById('reps'), qfb = document.getElementById('qfb'), qsuite = document.getElementById('qsuite');
+var qi = 0, score = 0, fini = false;
+document.getElementById('versQuiz').addEventListener('click', function(){
+  merci.classList.add('hidden'); quiz.classList.remove('hidden'); qi = 0; score = 0; fini = false; afficher();
+});
+function afficher(){
+  if (qi >= QUIZ.length) { fin(); return; }
+  var d = QUIZ[qi];
+  qnum.textContent = "Question " + (qi + 1) + " sur " + QUIZ.length;
+  qtitre.textContent = d.q; qfb.textContent = ''; reps.textContent = '';
+  qsuite.classList.add('hidden');
+  d.r.forEach(function(t, i){
+    var b = document.createElement('button');
+    b.className = 'b rep'; b.textContent = t;
+    b.addEventListener('click', function(){ repondre(i, b); });
+    reps.appendChild(b);
+  });
+}
+function repondre(i, b){
+  var d = QUIZ[qi], tous = reps.children;
+  for (var k = 0; k < tous.length; k++) tous[k].disabled = true;
+  if (i === d.b) { score++; b.classList.add('ok'); qfb.textContent = d.ok; }
+  else { b.classList.add('ko'); tous[d.b].classList.add('ok'); qfb.textContent = d.ko; }
+  qsuite.textContent = (qi === QUIZ.length - 1) ? "Voir mon score" : "Suivant";
+  qsuite.classList.remove('hidden');
+}
+function fin(){
+  fini = true;
+  qnum.textContent = ''; reps.textContent = '';
+  qtitre.textContent = "Score : " + score + " sur " + QUIZ.length + " 🤍";
+  qfb.textContent = score === QUIZ.length ? "Parfait, tu me connais par cœur 🥹" : score >= 3 ? "Pas mal… mais il faut réviser un peu 😏" : "Aïe. On en reparle samedi 😄";
+  qsuite.textContent = "Revoir mon ticket"; qsuite.classList.remove('hidden');
+}
+qsuite.addEventListener('click', function(){
+  if (fini) { quiz.classList.add('hidden'); merci.classList.remove('hidden'); return; }
+  qi++; afficher();
+});
+
+function lancerSuite(){
+  var cible = new Date(2026, 11, 5, 16, 0, 0).getTime();
+  var cpt = document.getElementById('cpt');
+  function maj(){
+    var d = cible - Date.now();
+    if (d <= 0) { cpt.textContent = "C’est maintenant, viens vite 🧺"; return; }
+    var j = Math.floor(d / 864e5), hh = Math.floor(d % 864e5 / 36e5), m = Math.floor(d % 36e5 / 6e4), s = Math.floor(d % 6e4 / 1e3);
+    cpt.textContent = "Dans " + j + " j " + hh + " h " + m + " min " + s + " s";
+  }
+  maj(); setInterval(maj, 1000);
+  var txt = "Joyeux anniversaire mon bébé, mon tout mon bébé Miè Zo à moi, celui avec qui je me vois vieillir et prendre des rides ce samedi.\n\nJe veux que l’on se retrouve une nouvelle fois juste tous les deux, tête-à-tête, en face de la mer. Je t’attends, je suis très impatiente.\n\nMy love is unconditional";
+  var el = document.getElementById('lettre'), i = 0;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { el.textContent = txt; return; }
+  (function ecrire(){ el.textContent = txt.slice(0, ++i); if (i < txt.length) setTimeout(ecrire, 45); })();
+}
+</script>
+</body>
+</html>
